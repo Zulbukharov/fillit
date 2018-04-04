@@ -1,0 +1,8 @@
+[ERROR] Usage : ./tetri-gen {-v | -i} + {-f | -s} + nb
+Args :
+	-v : Valid grid
+	-i : Invalid grid (with errors)
+
+	-f : Write grid in a file ./sample.fillit
+	-s : Send the grid directly by the standard input (handle = 0)
+NB : Numbers of tetriminos per file, between 0 and 26 (may vary if invalid grid arg)
