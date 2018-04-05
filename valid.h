@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fillit.h                                           :+:      :+:    :+:   */
+/*   valid.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tkuhar <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/01 18:21:44 by tkuhar            #+#    #+#             */
-/*   Updated: 2018/04/04 16:23:16 by azulbukh         ###   ########.fr       */
+/*   Updated: 2018/04/05 21:49:52 by azulbukh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 typedef struct	s_elem
 {
 	struct s_elem	*next;
-	struct s_elem	*prev;
 	int		*pos;
 }				t_elem;
 
@@ -32,7 +31,7 @@ typedef struct	s_list
 }				list;
 
 void	reverse(list **head);
-list	*find_squad(t_elem **q, list **res);
-void	print(list **head);
+list	*find_squad(t_elem **q, list **res, int *n);
+void	print(list **head, int n);
 
 #endif
