@@ -6,17 +6,16 @@
 /*   By: azulbukh <azulbukh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/02 18:24:41 by azulbukh          #+#    #+#             */
-/*   Updated: 2018/04/06 22:39:25 by azulbukh         ###   ########.fr       */
+/*   Updated: 2018/04/07 19:41:00 by azulbukh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "valid.h"
-#include <stdlib.h>
-#include <stdio.h>
+#include "head.h"
+#include "./libft/libft.h"
 
-int		find(int x, int y, list **head, char *a)
+int		find(int x, int y, t_l **head, char *a)
 {
-	list	*cur;
+	t_l		*cur;
 	int		i;
 
 	cur = *head;
@@ -37,100 +36,11 @@ int		find(int x, int y, list **head, char *a)
 	return (0);
 }
 
-void	set_char(list **head)
-{
-	list *cur;
-	char i;
-
-	i = 'A';
-	cur = *head;
-	while (cur)
-	{
-		cur->c = i;
-		i++;
-		cur = cur->n;
-	}
-}
-
-void	reverse(list **head)
-{
-	list *prev;
-	list *current;
-	list *next;
-
-	prev = NULL;
-	current = *head;
-	next = NULL;
-	while (current != NULL)
-	{
-		next = current->n;
-		current->n = prev;
-		prev = current;
-		current = next;
-	}
-	*head = prev;
-	set_char(head);
-}
-
-void	print(list **head, int n)
-{
-	int		x;
-	int		y;
-	char	a;
-	list	*cur;
-
-	x = 0;
-	cur = *head;
-	while (x < n - 1)
-	{
-		y = 0;
-		while (y < n - 1)
-		{
-			if (find(x, y, head, &a))
-				printf("%c", a);
-			else
-				printf(".");
-			y++;
-		}
-		printf("\n");
-		x++;
-	}
-}
-
-list	*pop(list *head)
-{
-	list *temp;
-
-	temp = head;
-	head = head->n;
-	free(temp);
-	return (head);
-}
-
-list	*push_front(int *p, list *head, int col, int row)
-{
-	list	*new;
-	int		i;
-
-	i = 0;
-	new = malloc(sizeof(list));
-	if (!new)
-		return (NULL);
-	while (i < 8)
-	{
-		new->pos[i] = p[i] + col;
-		new->pos[i + 1] = p[i + 1] + row;
-		i += 2;
-	}
-	new->n = head;
-	return (new);
-}
-
-int		ft_is_contain(list *cur, list *next, int i, int square)
+int		ft_is_contain(t_l *cur, t_l *next, int i, int square)
 {
 	int		n;
-	list	*c;
-	list	*ne;
+	t_l		*c;
+	t_l		*ne;
 	int		s;
 
 	s = square;
@@ -148,10 +58,10 @@ int		ft_is_contain(list *cur, list *next, int i, int square)
 	return (1);
 }
 
-int		ft_compare(list *head, int square)
+int		ft_c(t_l *head, int square)
 {
-	list	*cur;
-	list	*next;
+	t_l		*cur;
+	t_l		*next;
 	int		i;
 
 	i = 0;
@@ -173,68 +83,53 @@ int		ft_compare(list *head, int square)
 	return (1);
 }
 
-int		count_res(list **head)
+int		place_sq(t_m *curq, int *cr, t_l **r, t_n *he)
 {
-	int		i;
-	list	*cur;
+	int		crcr[2];
 
-	i = 0;
-	cur = *head;
-	while (cur)
-	{
-		i++;
-		cur = cur->n;
-	}
-	return (i);
-}
-
-int		count_elem(t_elem *curq)
-{
-	t_elem	*cur;
-	int		i;
-
-	i = 0;
-	cur = curq;
-	while (cur)
-	{
-		i++;
-		cur = cur->next;
-	}
-	return (i);
-}
-
-int		place_squad(t_elem *curq, int col, int row, list **res, num *he)
-{
-	*res = push_front(curq->pos, *res, col, row);
-	if (ft_compare(*res, *(he->n)) && curq->next
-			&& place_squad(curq->next, 0, 0, res, he))
+	crcr[0] = 0;
+	crcr[1] = 0;
+	*r = push_front(curq->pos, *r, cr[0], cr[1]);
+	if (ft_c(*r, *(he->n)) && curq->next && place_sq(curq->next, crcr, r, he))
 		return (1);
 	else
 	{
-		if (ft_compare(*res, *(he->n)) && count_res(res) == he->c)
+		if (ft_c(*r, *(he->n)) && count_res(r) == he->c)
 			return (1);
-		*res = pop(*res);
-		if (row < *(he->n) && col < *(he->n))
-			place_squad(curq, col + 1, row, res, he);
-		else if (col >= *(he->n) && row < *(he->n))
-			place_squad(curq, 0, row + 1, res, he);
+		*r = pop(*r);
+		if (cr[1] < *(he->n) && cr[0] < *(he->n))
+		{
+			crcr[0] = cr[0] + 1;
+			crcr[1] = cr[1];
+			place_sq(curq, crcr, r, he);
+		}
+		else if (cr[0] >= *(he->n) && cr[1] < *(he->n))
+		{
+			crcr[1] = cr[1] + 1;
+			place_sq(curq, crcr, r, he);
+		}
 	}
 	return (0);
 }
 
-list	*find_squad(t_elem **q, list **res, int *n)
+t_l		*find_squad(t_m **q, t_l **res, int *n)
 {
-	t_elem	*curq;
-	num		*he;
-	
+	t_m		*curq;
+	t_n		*he;
+	int		*cr;
+
+	cr = malloc(sizeof(int) * 2);
+	cr[0] = 0;
+	cr[1] = 0;
 	curq = *q;
-	he = malloc(sizeof(num));
+	he = malloc(sizeof(t_n));
 	he->n = n;
 	he->c = count_elem(*q);
 	while (!*res)
 	{
-		place_squad(curq, 0, 0, res, he);
+		place_sq(curq, cr, res, he);
 		*(he->n) += 1;
 	}
+	free(cr);
 	return (*res);
 }
